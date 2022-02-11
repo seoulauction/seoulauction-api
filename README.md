@@ -96,6 +96,7 @@ $ curl -XPOST http://seoulauction-api.com/lots
         {
             "lotNumber": 100004,
             "lotPrice": 30000,
+	     "lotTotalPrice": 1198000,
             "lotStatus": "PROGRESS",  
             "lotBidCount": 5,
             "lotEstimatePrice": {

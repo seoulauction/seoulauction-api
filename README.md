@@ -1,142 +1,105 @@
 # seoulauction-api
 seoulauction-api
 
-# Rest API
+## 경매 조회 API
 
-인증 완료 후, 다음의 페이지로 리다이렉트
+### [POST] lots
 
-```
-https://seoulauction.com/ssg/page...
-```
+경매 번호에 매핑된 경매 작품번호의 정보를 조회합니다.
 
----
 
-## 경매상태
 
-경매 상태 확인 API
+##### 제공되는 경매 작품 정보
 
-```
-[Request]
-POST /ssg/lots/status/{saleNo}/{lotNo}
-Host: https://seoulauction.com
+* **`lotNumber`** : 랏 번호
+* **`lotPrice`** : 현재 가격
+* **`lotTotalPrice`** : 수수료포함 가격(+19.8%) 
+* **`lotStatus`** : 랏 진행 상태 (FROM_DT , TO_DT)
+  * READY : 경매 시작전
+  * PROGRESS : 경매중
+  * FINISH : 경매 종료
+  * CANCEL : 출품 취소
+* **`lotBidCount`** : 경매 응찰 건수 
+* **`lotEstimatePrice`**: 추정가 (by collectors 는 추정가 있음)
+  * from
+  * to
 
-# Headers
-Content-Type: application/x-www-form-urlencoded
 
-# Body
-HTTP/1.1 200 OK		
-Content-type: application/json;charset=UTF-8		
-{		
-  "message": "success",		
-  "data": {		
-    status : "ongoing"		
-  }		
-}
-```
 
-```
-**[Response]**
+### 요청 예시
 
-# 200
+```sh
+$ curl -XPOST http://seoulauction-api.com/lots
 {
-  "result": "success",
-  "data": {
-		"status": "ongoing" # status: enum(ongoing/end/success/bought) - (진행중/낙찰/유찰)
-  }
+	"saleNumber": 123,
+	"lotNumbers": [
+		100001,
+		100002,
+		100003,
+		100004
+	]
 }
+```
 
-# 400
+* **`saleNumber`** : 경매 번호 (필수값)
+
+* **`lotNumbers`** : 경매 작품 번호 (필수값)
+
+
+
+##### 상세 설명
+
+* 경매 정보 조회 API 는 1초 간격으로 캐쉬 값이 갱신이 됩니다. 
+* 즉, 1초 이내 동일정보 호출시 동일한 값이 확인 됩니다.
+
+
+
+### 응답 예시
+
+```json
 {
-  "result": "error",
-  "message": "invalid params"
+    "saleNo": 123,
+    "lotData": [
+        {
+            "lotNumber": 100001,
+            "lotPrice": 0,
+            "lotStatus": "READY",  
+            "lotBidCount": 1
+        },
+        {
+            "lotNumber": 100002,
+            "lotPrice": 1000000,
+            "lotStatus": "FINISH",  
+            "lotBidCount": 10
+        },
+        {
+            "lotNumber": 100003,
+            "lotPrice": 0,
+            "lotStatus": "CANCEL",  
+            "lotBidCount": 0
+        }
+        {
+            "lotNumber": 100004,
+            "lotPrice": 30000,
+            "lotStatus": "PROGRESS",  
+            "lotBidCount": 5
+        } 
+    ]
 }
 ```
 
----
+* **`lotNumber`** : 경매번호
+* **`lotPrice`** : 현재 가격 
+* **`lotStatus`** : 경매 상태
+  * READY : 경매 시작전
+  * PROGRESS : 경매중
+  * FINISH : 경매 종료
+  * CANCEL : 출품 취소
 
-## 가격조회
+* **`lotBidCount`** : 경매 응찰 건수 
 
-해당 랏의 가격 정보
 
-```
-**[Request]**
-POST /ssg/lots/price
-Host: https://seoulauction.com/api/v1
 
-# Headers
-Content-Type: application/x-www-form-urlencoded
-X-Custom-Provider-Secret: sa-ssg-secret-key
+> 유효하지 lotNumber가 포함된 경우, 유효한 lotNumber 에 한해서 응답이 내려가며, 유효하지 않은 lotNumber 는 생략이 됩니다.
 
-# Body
-{
-  "sale": "123",
-  "lot": "1234"
-}
-```
 
-```
-**[Response]**
-
-# 200
-{
-  "result": "success",
-  "data": {
-		"price": "12000000" # number
-  }
-}
-
-# 400
-{
-  "result": "error",
-  "message": "invalid params"
-}
-```
-
----
-
-## 응찰하기
-
-응찰하기 버튼 클릭 후, 인증 요청.
-
-```
-Webview.open("https://seoulauction.com/ssg/autorize?uid=sa-ssg-11119999")
-
-Webview.open("https://seoulauction.com/ssg/autorize?cid=11119999")
-
---- 구현 ---
-/views/ssg/authorize.jsp
-
---> 버튼 클릭시, 네이티브의 window.webkit.closeWebview();
-```
-
-![deb78b4775eaac7999949c4a7c47d333635f7794.png](Rest%20API%2078f62835e8a84623a31b9f8c150969e6/deb78b4775eaac7999949c4a7c47d333635f7794.png)
-
-```
-**[Request]**
-POST /ssg/authorize
-Host: https://seoulauction.com/api/v1
-
-# Headers
-Content-Type: application/x-www-form-urlencoded
-X-Custom-Provider-Secret: sa-ssg-secret-key
-
-# Body
-{
-  "uid": "sa-ssg-11119999"
-}
-```
-
-```
-**[Response]**
-
-# 200
-{
-  "result": "success"
-}
-
-# 400
-{
-  "result": "error",
-  "message": "invalid uid"
-}
-```

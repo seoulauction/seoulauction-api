@@ -21,8 +21,8 @@ seoulauction-api
   * CANCEL : 출품 취소
 * **`lotBidCount`** : 경매 응찰 건수 
 * **`lotEstimatePrice`**: 추정가 (by collectors 는 추정가 있음)
-  * from
-  * to
+  * `from`
+  * `to`
 
 
 
@@ -62,42 +62,50 @@ $ curl -XPOST http://seoulauction-api.com/lots
     "lotData": [
         {
             "lotNumber": 100001,
-            "lotPrice": 0,
+            "lotPrice": 1000000,
+            "lotTotalPrice": 1198000,
             "lotStatus": "READY",  
-            "lotBidCount": 1
+            "lotBidCount": 1,
+            "lotEstimatePrice": {
+              "from": 500000,
+              "to": 1000000
+            }
         },
         {
             "lotNumber": 100002,
             "lotPrice": 1000000,
+            "lotTotalPrice": 1198000,
             "lotStatus": "FINISH",  
-            "lotBidCount": 10
+            "lotBidCount": 10,
+            "lotEstimatePrice": {
+              "from": 500000,
+              "to": 1000000
+            }
         },
         {
             "lotNumber": 100003,
             "lotPrice": 0,
+            "lotTotalPrice": 1198000,
             "lotStatus": "CANCEL",  
-            "lotBidCount": 0
+            "lotBidCount": 0,
+            "lotEstimatePrice": {
+              "from": 500000,
+              "to": 1000000
+            }
         }
         {
             "lotNumber": 100004,
             "lotPrice": 30000,
             "lotStatus": "PROGRESS",  
-            "lotBidCount": 5
+            "lotBidCount": 5,
+            "lotEstimatePrice": {
+              "from": 500000,
+              "to": 1000000
+            }
         } 
     ]
 }
 ```
-
-* **`lotNumber`** : 경매번호
-* **`lotPrice`** : 현재 가격 
-* **`lotStatus`** : 경매 상태
-  * READY : 경매 시작전
-  * PROGRESS : 경매중
-  * FINISH : 경매 종료
-  * CANCEL : 출품 취소
-
-* **`lotBidCount`** : 경매 응찰 건수 
-
 
 
 > 유효하지 lotNumber가 포함된 경우, 유효한 lotNumber 에 한해서 응답이 내려가며, 유효하지 않은 lotNumber 는 생략이 됩니다.

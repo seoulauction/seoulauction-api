@@ -1,22 +1,23 @@
 # seoulauction-api
-seoulauction-api
 
 ## 경매 조회 API
 
-### [POST] lots
+### [GET] /api/lots
 
 경매 번호에 매핑된 경매 작품번호의 정보를 조회합니다.
 
+#### Request 
+* **`saleNumber`** : 경매 번호 (필수값)
+* **`lotNumbers`** : 경매 작품번호 (필수값)
 
-
-##### 제공되는 경매 작품 정보
-
-* **`lotNumber`** : 랏 번호
+##### Response
+* **`saleNumber`** : 경매 번호
+* **`lotNumber`** : 경매 작품번호
 * **`lotPrice`** : 현재 가격
-* **`lotTotalPrice`** : 수수료포함 가격(+19.8%) 
+* **`lotTotalPrice`** : 수수료 포함 가격(+19.8%) 
 * **`lotStatus`** : 랏 진행 상태 (FROM_DT , TO_DT)
   * READY : 경매 시작전
-  * PROGRESS : 경매중
+  * PROGRESS : 경매 중
   * FINISH : 경매 종료
   * CANCEL : 출품 취소
 * **`lotBidCount`** : 경매 응찰 건수 
@@ -25,26 +26,11 @@ seoulauction-api
   * `to`
 
 
-
 ### 요청 예시
 
 ```sh
-$ curl -XPOST http://seoulauction-api.com/lots
-{
-	"saleNumber": 123,
-	"lotNumbers": [
-		100001,
-		100002,
-		100003,
-		100004
-	]
-}
+$ curl -XGET 'http://dev.seoulauction.xyz/api/lots?saleNumber=689&lotNumbers=1,2,3'
 ```
-
-* **`saleNumber`** : 경매 번호 (필수값)
-
-* **`lotNumbers`** : 경매 작품 번호 (필수값)
-
 
 
 ##### 상세 설명
@@ -58,56 +44,44 @@ $ curl -XPOST http://seoulauction-api.com/lots
 
 ```json
 {
-    "saleNo": 123,
-    "lotData": [
-        {
-            "lotNumber": 100001,
-            "lotPrice": 1000000,
-            "lotTotalPrice": 1198000,
-            "lotStatus": "READY",  
-            "lotBidCount": 1,
-            "lotEstimatePrice": {
-              "from": 500000,
-              "to": 1000000
-            }
-        },
-        {
-            "lotNumber": 100002,
-            "lotPrice": 1000000,
-            "lotTotalPrice": 1198000,
-            "lotStatus": "FINISH",  
-            "lotBidCount": 10,
-            "lotEstimatePrice": {
-              "from": 500000,
-              "to": 1000000
-            }
-        },
-        {
-            "lotNumber": 100003,
-            "lotPrice": 0,
-            "lotTotalPrice": 1198000,
-            "lotStatus": "CANCEL",  
-            "lotBidCount": 0,
-            "lotEstimatePrice": {
-              "from": 500000,
-              "to": 1000000
-            }
-        }
-        {
-            "lotNumber": 100004,
-            "lotPrice": 30000,
-	     "lotTotalPrice": 1198000,
-            "lotStatus": "PROGRESS",  
-            "lotBidCount": 5,
-            "lotEstimatePrice": {
-              "from": 500000,
-              "to": 1000000
-            }
-        } 
-    ]
+	"lotData":[
+		{
+			"lotStatus":"PROGRESS",
+			"lotTotalPrice":1437600,
+			"lotPrice":1200000,
+			"lotBidCount":8,
+			"lotNumber":1,
+			"estimatePrice":{
+				"from":"800000",
+				"to":"2000000"
+			}
+		},
+		{
+			"lotStatus":"PROGRESS",
+			"lotTotalPrice":0,
+			"lotPrice":0,
+			"lotBidCount":0,
+			"lotNumber":2,
+			"estimatePrice":{
+				"from":"800000",
+				"to":"2000000"
+			}
+		},
+		{
+			"lotStatus":"PROGRESS",
+			"lotTotalPrice":2396000,
+			"lotPrice":2000000,
+			"lotBidCount":1,
+			"lotNumber":3,
+			"estimatePrice":{
+				"from":"2000000",
+				"to":"4000000"
+			}
+		}
+	],
+	"saleNumber":689
 }
 ```
-
 
 > 유효하지 lotNumber가 포함된 경우, 유효한 lotNumber 에 한해서 응답이 내려가며, 유효하지 않은 lotNumber 는 생략이 됩니다.
 

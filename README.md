@@ -84,5 +84,49 @@ $ curl -XGET 'http://dev.seoulauction.xyz/api/lots?saleNumber=689&lotNumbers=1,2
 ```
 
 > 유효하지 lotNumber가 포함된 경우, 유효한 lotNumber 에 한해서 응답이 내려가며, 유효하지 않은 lotNumber 는 생략이 됩니다.
+<br/>
 
+## **회원탈회 API**
 
+## https://dev.seoulauction.xyz
+
+### [POST] /api/custs/leave/{custId}
+
+custId 고객을 탈회시킵니다.
+
+### Request
+
+- `custId` : 회원번호(필수값)
+
+### Response
+
+- `result` : 결과
+- `message` : 결과 메세지
+
+### **요청 예시**
+
+```
+$ curl -XPOST 'https://dev.seoulauction.xyz/api/custs/leave/rugEGAjQ3Z7ShRw1e%2BPjTA%3D%3D'
+```
+
+### **응답 예시**
+
+```json
+성공
+{
+  "message": "OK",
+  "result": "success"
+}
+---
+실패(존재하지 않는 custId)
+{
+  "message": "NOT_FOUND",
+  "result": "fail"
+}
+---
+실패(내부 서버오류)
+{
+  "message": "INTERNAL_SERVER_ERROR",
+  "result": "fail"
+}
+```
